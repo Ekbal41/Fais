@@ -1,12 +1,37 @@
 {
   "name": "fais",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "engines": {
+    "node": ">=10.0.0"
+  },
+  "files": [
+    "README.md",
+    "index.js",
+    "src/fais.js",
+    "src/query-parser.js",
+    "src/url-parser.js"
+  ],
+  "description": "A mini framework for building web",
+  "main": "./src/fais.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "fais",
+    "framework",
+    "web",
+    "http",
+    "rest",
+    "restful",
+    "router",
+    "app",
+    "api"
+  ],
+  "author": "Asif Ekbal (https://asifekbal.vercel.app)",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Ekbal41/Fais.git"
+  },
+  "license": "MIT",
   "type": "module"
 }
