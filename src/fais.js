@@ -1,7 +1,7 @@
 import http from "http";
 import urlParser from "./url-parser.js";
 import queryParser from "./query-parser.js";
-
+import nunjucks from "nunjucks";
 
 let server;
 
@@ -11,12 +11,17 @@ function createResponse(res) {
     res.setHeader("Content-Type", "application/json");
     res.end(JSON.stringify(data));
   };
+  //render html file with nunjuncks
+  res.render = (template, data) => {
+    res.setHeader("Content-Type", "text/html");
+    res.end(nunjucks.render(template, data));
+  };
+
   return res;
 }
 
 function processMiddleware(middleware, req, res) {
   if (!middleware) {
-    // resolve false
     return new Promise((resolve) => resolve(true));
   }
 
@@ -27,9 +32,23 @@ function processMiddleware(middleware, req, res) {
   });
 }
 
-export default function Fais() {
+/**
+ * This is the main class of the Fais framework
+ * @class Fais
+ * @returns {Object}
+ * Methods for http verbs and listen to a given port.
+ * Supported http verbs are get, post, put and  delete.
+ * @example
+ * const app = new Fais();
+ * app.get("/home", (req, res) => {
+ *     res.json({});
+ * });
+ * app.listen(3000, () => {
+ *     console.log("Server running on port 3000");});
+ */
+function Fais() {
   let routeTable = {};
-  let parseMethod = "json"; // json, plain text
+  let parseMethod = "json";
 
   function readBody(req) {
     return new Promise((resolve, reject) => {
@@ -52,16 +71,14 @@ export default function Fais() {
     for (var i = 0; i < routes.length; i++) {
       const route = routes[i];
       const parsedRoute = urlParser(route);
-      if (
-        new RegExp(parsedRoute).test(req.url) &&
-        routeTable[route][req.method.toLowerCase()]
-      ) {
+      const path = req.url;
+      const regex = new RegExp(`^${parsedRoute}$`);
+      const optionalyMatched = regex.test(path);
+      if (optionalyMatched && routeTable[route][req.method.toLowerCase()]) {
         let callback = routeTable[route][req.method.toLowerCase()];
         let middleware =
           routeTable[route][`${req.method.toLowerCase()}-middleware`];
-        // console.log("regex", parsedRoute);
         const m = req.url.match(new RegExp(parsedRoute));
-        // console.log("params", m.groups);
 
         req.params = m.groups;
         req.query = queryParser(req.url);
@@ -80,14 +97,13 @@ export default function Fais() {
         if (result) {
           callback(req, res);
         }
-
         match = true;
         break;
       }
     }
     if (!match) {
       res.statusCode = 404;
-      res.end("Not found");
+      res.end(`${req.url} Route Not found`);
     }
   });
 
@@ -138,3 +154,5 @@ export default function Fais() {
     _server: server,
   };
 }
+
+export default Fais;

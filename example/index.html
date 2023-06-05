@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{title}}</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      .div-cenrer {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #f1f1f1;
+        flex-direction: column;
+      }
+      .title {
+        font-size: 3rem;
+        color: #333;
+        font-family: monospace;
+        margin-bottom: 1rem;
+      }
+      .subtitle {
+        font-size: 1.5rem;
+        color: #555;
+        font-family: monospace;
+      }
+      .version {
+        font-size: 1rem;
+        color: #777;
+        font-family: monospace;
+        margin-bottom: 1rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="div-cenrer">
+      <p class="version">Version : 1.0.0</p>
+      <h1 class="title">{{message}}</h1>
+      <p class="subtitle">
+        A minimal framework for building fast and efficient web applications.
+      </p>
+    </div>
+  </body>
+</html>
