@@ -1,6 +1,7 @@
 <p align="center">
-![Image](https://github.com/Ekbal41/Fais/blob/main/fais.png?raw=true)
+  <img src="https://github.com/Ekbal41/Fais/assets/103681582/6843a36d-674a-4d03-a071-cfbcdfd6e2cb" alt="Fais Logo"/>
 </p>
+
 
 [![The MIT License](https://img.shields.io/badge/license-MIT-orange.svg?color=blue&style=flat-square)](http://opensource.org/licenses/MIT)
 
