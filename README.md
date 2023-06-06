@@ -26,7 +26,7 @@ npm install fais
 ## Install Via Fais-cli
 
 ```bash
-npm install fais-cli
+npm install -g fais-cli
 ```
 You can quickly generate a Fais project via `fais-cl`. After generating the project,
 
