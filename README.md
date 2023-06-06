@@ -1,5 +1,5 @@
 <p align="center">
-![alt text](https://github.com/Ekbal41/Fais/blob/main/fais.png?raw=true)
+![Image](https://github.com/Ekbal41/Fais/blob/main/fais.png?raw=true)
 </p>
 
 [![The MIT License](https://img.shields.io/badge/license-MIT-orange.svg?color=blue&style=flat-square)](http://opensource.org/licenses/MIT)
