@@ -23,10 +23,24 @@ This is a minimalistic Web framework for Node.js. It helps you create RESTful AP
 ```bash
 npm install fais
 ```
+## Install Via Fais-cli
 
-## Features
+```bash
+npm install fais-cli
+```
+You can quickly generate a Fais project via `fais-cl`. After generating the project,
 
-- Create routes supporting GET, POST, PUT, DELETE HTTP Verbs:
+```bash
+cd your-project
+npm install
+npm run dev
+```
+
+Development server will start in `http://localhost:8000/` . Now you can start with `src` dir for further development.
+
+## Features
+
+- Create routes supporting `get`, `post`, `put`, `delete` http verbs:
 
   ```javascript
   app.get("<path>", (req, res) => {});
