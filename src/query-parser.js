@@ -1,17 +1,26 @@
-function queryParser (url) {
-    const results = url.match(/\?(?<query>.*)/);
-    if (!results) {
-      return {};
-    }
-    const { groups: { query } } = results;
-  
-    const pairs = query.match(/(?<param>\w+)=(?<value>\w+)/g);
-    const params = pairs.reduce((acc, curr) => {
-      const [key, value] = curr.split(("="));
-      acc[key] = value;
-      return acc;
-    }, {});
-    return params;
+/**
+Parses the query string from a URL and returns an object containing the key-value pairs.
+@param {string} url - The URL containing the query string.
+@returns {Object} - An object containing the parsed query parameters.
+*/
+function queryParser(url) {
+  const queryStartIndex = url.indexOf("?");
+  if (queryStartIndex === -1) {
+    return {};
   }
 
-  export default queryParser;
+  const query = url.slice(queryStartIndex + 1);
+  const pairs = query.split("&");
+  const params = {};
+
+  for (let pair of pairs) {
+    const [key, value] = pair.split("=");
+    const decodedKey = decodeURIComponent(key);
+    const decodedValue = decodeURIComponent(value);
+    params[decodedKey] = decodedValue;
+  }
+
+  return params;
+}
+
+export default queryParser;

@@ -1,6 +1,6 @@
 {
   "name": "fais",
-  "version": "1.0.2",
+  "version": "1.0.4",
   "engines": {
     "node": ">=10.0.0"
   },
@@ -35,6 +35,8 @@
   "license": "MIT",
   "type": "module",
   "dependencies": {
-    "nunjucks": "^3.2.4"
+    "finalhandler": "^1.2.0",
+    "nunjucks": "^3.2.4",
+    "serve-static": "^1.15.0"
   }
 }

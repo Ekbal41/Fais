@@ -3,14 +3,22 @@ import Fais from "../src/fais.js";
 const app = new Fais();
 const PORT = 3000;
 
-app.get("/", (req, res) => {
-  res.render("./example/index.html", {
+app.assets("/assets"); // Set the default "assets" folder
+
+const logger = (req, res, next) => {
+  console.log("Request received");
+  next();
+}; // Custom middleware
+
+app.get("/", logger, (req, res) => {
+  res.render("./index.html", {
     title: "Fais Demo Website",
     message: "Welcome to Fais Framework",
   });
 });
 
-app.get("/home", (req, res) => {
+
+app.get("/home", logger, (req, res) => {
   res.json({
     name: "asif ekbal",
     age: 23,
@@ -29,9 +37,9 @@ app.get(
         " " +
         req.params.slug +
         " " +
-        req.query.name +
+        req.query.n +
         " " +
-        req.query.age
+        req.query.a
     );
   }
 );

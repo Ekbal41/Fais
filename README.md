@@ -7,6 +7,7 @@
 - [Features](#features)
 - [Create an app](#create-an-app)
 - [Templating engine](#templating-engine)
+- [Assets](#assets)
 
 ## About
 
@@ -30,11 +31,11 @@ npm install fais
   ```
 
 - Reads posted body to either Text or JSON. Use method `bodyParse(method)` to change how the body is parsed. Valid input values `json` or `text`.
-- Has middleware that you can run before handling the actual request. Can be used for Authentication for example.
+- Has middleware that you can run before handling the actual request.
 
   ```javascript
-  app.get("/products", (req, res, next) => {
-    if (req.headers["authorization"] === "blabla") {
+  app.get("/protected-route", (req, res, next) => {
+    if (req.headers["authorization"] === "admin") {
       next();
     } else {
       res.statusCode = 401;
@@ -48,18 +49,26 @@ npm install fais
   **Router parameters**
 
   ```javascript
-  app.get("/products/:id", (req, res) => {
-    console.log(req.params); // for route /products/1 { id: "1" }
+  app.get("/home/:id/:name", (req, res) => {
+    console.log(req.params); // /home/200/papar returns {id : 200, name : papar}
   });
   ```
 
   **Query parameters**
 
   ```javascript
-  app.get("/products/", (req, res) => {
-    console.log(req.query); // for route /products?page=1&pageSize=20 { page: "1", pageSize: "20"}
+  app.get("/home?name=lofar&&age=23", (req, res) => {
+    console.log(req.query); // returns { name: "lofar", age: "23"}
   });
   ```
+
+## Assets
+
+- Default asstes folder is "/puplic" , You can change it.
+
+```javascript
+app.asstes("/your-assets-folder-name");
+```
 
 ## Templating engine
 
@@ -80,34 +89,35 @@ app.get("/", (req, res) => {
 import Fais from fais
 
 const app = Fais();
+const PORT = 3000
 
 // ROUTE PARAMETERS
-app.get("/products/:id", (req, res) => {
+app.get("/home/:id", (req, res) => {
   console.log("query params", req.query);
   console.log('req.params', req.params);
   res.send("product id");
 });
 
-app.get('/products', (req, res) => {
+app.get('/home', (req, res) => {
   console.log('query params', req.query)
   res.send('text');
 })
 
 // POST
-app.post('/products', (req,res) => {
+app.post('/home', (req,res) => {
   console.info('body', req.body)
   res.json(req.body);
 })
 
 // PUT
-app.put('/products', (req,res) => {
+app.put('/home', (req,res) => {
   console.info('body', req.body)
   res.json(req.body);
 })
 
 // MIDDLEWARE
 app.get('/orders', (req, res, next) => {
-  if (req.headers['authorization'] === 'blabla') {
+  if (req.headers['authorization'] === 'Staff') {
     console.log('next', next)
     next()
   } else {
@@ -119,7 +129,7 @@ app.get('/orders', (req, res, next) => {
 })
 
 // Starts listening to requests
-app.listen(3000, () => {
-  console.log('Server running on 3000');
-})
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT} : http://localhost:${PORT}`);
+});
 ```
