@@ -1,15 +1,13 @@
 {
   "name": "fais",
-  "version": "1.0.5",
+  "version": "1.0.11",
   "engines": {
     "node": ">=10.0.0"
   },
   "files": [
     "README.md",
     "index.js",
-    "src/fais.js",
-    "src/query-parser.js",
-    "src/url-parser.js"
+    "src/*.js"
   ],
   "description": "A mini framework for building web",
   "main": "./src/fais.js",

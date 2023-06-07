@@ -14,15 +14,21 @@
  * ];
  * routeGroups(app, routeGroups);
  */
-function addRouteGroups(app, routeGroups) {
+function addRouteGroupsFunc(app, routeGroups) {
   for (const group of routeGroups) {
     const { routes, prefix } = group;
 
     for (const { method, path, handler } of routes) {
+      //if prefix is not provided, or and empty string, or a single forward slash
+      //then use the path as it is
+      if (!prefix || prefix === "" || prefix === "/") {
+        app[method](path, handler);
+        continue;
+      }
       const updatedPath = `${prefix}${path}`.replace(/\/$/, "");
       app[method](updatedPath, handler);
     }
   }
 }
 
-export default addRouteGroups;
+export default addRouteGroupsFunc;

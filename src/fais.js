@@ -2,6 +2,7 @@ import http from "http";
 import urlParser from "./url-parser.js";
 import queryParser from "./query-parser.js";
 import setViewEngine from "./view-engins.js";
+import addRouteGroupsFunc from "./route-groups.js";
 import { join } from "path";
 import { createReadStream } from "fs";
 
@@ -323,6 +324,25 @@ class Fais {
         config: obj.config,
       };
     }
+  }
+  /**
+   * Registers route groups with a specified prefix.
+   * @param {object} app - The application instance.
+   * @param {Array} routeGroups - An array of route group objects.
+   * @example
+   * const routeGroups = [
+   *   {
+   *     routes: [
+   *       { method: "get", path: "/", handler: (req, res) => { res.send("Welcome to root") } },
+   *       { method: "get", path: "/home", handler: (req, res) => { res.send("Welcome to home")} }
+   *     ],
+   *     prefix: "/welcome"
+   *   },
+   * ];
+   * routeGroups(app, routeGroups);
+   */
+  addRouteGroups(app, routeGroups) {
+    addRouteGroupsFunc(app, routeGroups);
   }
 
   /**
