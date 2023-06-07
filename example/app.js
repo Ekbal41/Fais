@@ -1,49 +1,20 @@
 import Fais from "../src/fais.js";
+import addRouteGroups from "../src/utils/route-groups.js";
+import ejs from "ejs";
+import welcomeRoute from "./routes/welcomeRoute.js";
 
 const app = new Fais();
 const PORT = 3000;
 
-app.assets("/assets"); // Set the default "assets" folder
+//add static folder
+app.assetsFolderPath("/assets");
 
-const logger = (req, res, next) => {
-  console.log("Request received");
-  next();
-}; // Custom middleware
-
-app.get("/", logger, (req, res) => {
-  res.render("./index.html", {
-    title: "Fais Demo Website",
-    message: "Welcome to Fais Framework",
-  });
+app.viewEngine({
+  name: "ejs",
+  engine: ejs,
+  config: {},
 });
-
-
-app.get("/home", logger, (req, res) => {
-  res.json({
-    name: "asif ekbal",
-    age: 23,
-    role: "admin",
-  });
-});
-app.get(
-  "/home/:id/:slug",
-  (req, res, next) => {
-    console.log(req.params);
-    next();
-  },
-  (req, res) => {
-    res.send(
-      req.params.id +
-        " " +
-        req.params.slug +
-        " " +
-        req.query.n +
-        " " +
-        req.query.a
-    );
-  }
-);
-
+addRouteGroups(app, [{ routes: welcomeRoute, prefix: "/welcome" }]);
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT} : http://localhost:${PORT}`);
 });

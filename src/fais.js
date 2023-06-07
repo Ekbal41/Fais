@@ -1,7 +1,7 @@
 import http from "http";
 import urlParser from "./url-parser.js";
 import queryParser from "./query-parser.js";
-import nunjucks from "nunjucks";
+import setViewEngine from "./view-engins.js";
 import { join } from "path";
 import { createReadStream } from "fs";
 
@@ -17,6 +17,12 @@ class Fais {
     this.routeTable = {};
 
     /**
+     * The route groups for storing registered routes.
+     * @type {Array}
+     */
+    this.routeGroups = [];
+
+    /**
      * The request body parsing method ("json" or "urlencoded").
      * @type {string}
      */
@@ -27,6 +33,20 @@ class Fais {
      * @type {string}
      */
     this.assetsFolder = "/public";
+
+    /**
+     * The templating engine to use.
+     * @type {string}
+     */
+    this.templatingEngine = {
+      name: "nunjucks",
+      engine: "nunjucks",
+      config: {
+        autoescape: true,
+        throwOnUndefined: false,
+        trimBlocks: false,
+      },
+    };
 
     /**
      * The HTTP server instance.
@@ -150,11 +170,7 @@ class Fais {
       res.setHeader("Content-Type", "application/json");
       res.end(JSON.stringify(data));
     };
-    res.render = (template, data) => {
-      res.setHeader("Content-Type", "text/html");
-      res.end(nunjucks.render(template, data));
-    };
-
+    setViewEngine(this.templatingEngine, res);
     return res;
   }
 
@@ -163,6 +179,11 @@ class Fais {
    * @param {string} path - The path of the route.
    * @param {Function} callback - The callback function to execute when the route is matched.
    * @param {Function} middleware - The middleware function to apply to the route (optional).
+   * @example
+   * // Registering a GET route
+   * app.get("/", (req, res) => {
+   *   res.send("Hello, world!");
+   * });
    */
   get(path, ...rest) {
     if (rest.length === 1) {
@@ -177,6 +198,11 @@ class Fais {
    * @param {string} path - The path of the route.
    * @param {Function} callback - The callback function to execute when the route is matched.
    * @param {Function} middleware - The middleware function to apply to the route (optional).
+   * @example
+   * // Registering a POST route
+   * app.post("/users", (req, res) => {
+   *   // Handle creating a new user
+   * });
    */
   post(path, ...rest) {
     if (rest.length === 1) {
@@ -191,6 +217,11 @@ class Fais {
    * @param {string} path - The path of the route.
    * @param {Function} callback - The callback function to execute when the route is matched.
    * @param {Function} middleware - The middleware function to apply to the route (optional).
+   * @example
+   * // Registering a PUT route
+   * app.put("/users/:id", (req, res) => {
+   *   // Handle updating a user
+   * });
    */
   put(path, ...rest) {
     if (rest.length === 1) {
@@ -201,10 +232,34 @@ class Fais {
   }
 
   /**
+   * Registers a UPDATE route.
+   * @param {string} path - The path of the route.
+   * @param {Function} callback - The callback function to execute when the route is matched.
+   * @param {Function} middleware - The middleware function to apply to the route (optional).
+   * @example
+   * // Registering a UPDATE route
+   * app.put("/users/:id", (req, res) => {
+   *   // Handle updating a user
+   * });
+   */
+  update(path, ...rest) {
+    if (rest.length === 1) {
+      this.registerPath(path, rest[0], "update");
+    } else {
+      this.registerPath(path, rest[1], "update", rest[0]);
+    }
+  }
+
+  /**
    * Registers a DELETE route.
    * @param {string} path - The path of the route.
    * @param {Function} callback - The callback function to execute when the route is matched.
    * @param {Function} middleware - The middleware function to apply to the route (optional).
+   * @example
+   * // Registering a DELETE route
+   * app.delete("/users/:id", (req, res) => {
+   *   // Handle deleting a user
+   * });
    */
   delete(path, ...rest) {
     if (rest.length === 1) {
@@ -235,15 +290,47 @@ class Fais {
 
   /**
    * Sets the folder path for serving static assets.
-   * @param {string} folder - The folder path for serving static assets.
+   * @param {string} folderPath - The folder path for serving static assets.
+   * @example
+   * // Setting the assets folder path
+   * app.assetsFolderPath("/public");
    */
-  assets(folder) {
-    this.assetsFolder = folder;
+  assetsFolderPath(folder) {
+    if (folder) {
+      this.assetsFolderPath = folder;
+    }
+  }
+
+  /**
+   * Sets the templating engine to use.
+   * @param {Object} engine - The templating engine configuration.
+   * @param {string} engine.name - The name of the templating engine.
+   * @param {string} engine.engine - The engine module name.
+   * @param {Object} engine.config - The configuration options for the templating engine.
+   * @example
+   * // Setting the templating engine to "ejs"
+   * app.viewEngine({
+   *   name: "ejs",
+   *   engine: ejs,
+   *   config: {}
+   * });
+   */
+  viewEngine(obj) {
+    if (obj) {
+      this.templatingEngine = {
+        name: obj.name,
+        engine: obj.engine,
+        config: obj.config,
+      };
+    }
   }
 
   /**
    * Sets the request body parsing method.
    * @param {string} method - The request body parsing method ("json" or "urlencoded").
+   * @example
+   * // Setting the request body parsing method to "json"
+   * app.bodyParser("json");
    */
   bodyParser(method) {
     this.parseMethod = method;
@@ -251,8 +338,13 @@ class Fais {
 
   /**
    * Starts the HTTP server and listens on the specified port.
-   * @param {number} port - The port number to listen on.
+   * @param {number} port - The port to listen on.
    * @param {Function} callback - The callback function to execute when the server starts listening.
+   * @example
+   * // Starting the server
+   * app.listen(3000, () => {
+   *   console.log("Server started on port 3000");
+   * });
    */
   listen(port, callback) {
     this.server.listen(port, callback);
